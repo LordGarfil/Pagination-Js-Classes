@@ -2,13 +2,14 @@ export class Pagination {
   constructor(data = [], numberMembers = 5) {
     this.data = data
     this.dataGroup = []
-    this.currentPageData = data[0]
+    this.currentPageData = []
     this.currentPage = 0
-    this.numberMembers = numberMembers
+    this.numberMembers = numberMembers > 0 ? numberMembers : 5
   }
 
   init() {
-    this.groupData()
+    this.group()
+    this.currentPageData = this.dataGroup[this.currentPage]
   }
 
   getCurrentPage() {
@@ -31,7 +32,7 @@ export class Pagination {
     return this.dataGroup[this.currentPage]
   }
 
-  groupData() {
+  group() {
     for (let i = 0; i < this.data.length; i += this.numberMembers) {
       const group = []
       for (let j = i; j < i + this.numberMembers; j++) {
@@ -44,12 +45,14 @@ export class Pagination {
   prevPage() {
     if (this.currentPage > 0) {
       this.currentPage -= 1
+      this.currentPageData = this.dataGroup[this.currentPage]
     }
   }
 
   nextPage() {
     if (this.currentPage < this.dataGroup.length - 1) {
       this.currentPage += 1
+      this.currentPageData = this.dataGroup[this.currentPage]
     }
   }
 }

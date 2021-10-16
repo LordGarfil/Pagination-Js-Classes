@@ -1,30 +1,31 @@
 import { Pagination } from "./components/pagination.js"
+import { get } from "./services/request.js"
+import { renderCharacters } from "./app.js"
 
-const data = [1,2,3,4,5,6,7,8]
-
-window.onload = () => {
-  const pagination = new Pagination(data, 4)
+window.onload = async () => {
+  const requestData = await get()
+  const pagination = new Pagination(requestData.results, 0)
   pagination.init()
 
-  renderData(pagination.getCurrentPageData())
+  const currentPageText = document.querySelector("small[name=currentPage]")
 
-  const prevPageButton = document.querySelector('button[name=prevPage]')
-  const nextPageButton = document.querySelector('button[name=nextPage]')
+  renderCharacters(pagination.currentPageData)
+  currentPageText.innerHTML = pagination.currentPage + 1
 
+  const prevPageButton = document.querySelector("button[name=prevPage]")
+  const nextPageButton = document.querySelector("button[name=nextPage]")
+  
   prevPageButton.onclick = function (e) {
     e.preventDefault()
     pagination.prevPage()
-    renderData(pagination.getCurrentPageData())
+    renderCharacters(pagination.currentPageData)
+    currentPageText.innerHTML = pagination.currentPage + 1
   }
 
   nextPageButton.onclick = function (e) {
     e.preventDefault()
     pagination.nextPage()
-    renderData(pagination.getCurrentPageData())
+    renderCharacters(pagination.currentPageData)
+    currentPageText.innerHTML = pagination.currentPage + 1
   }
-}
-
-function renderData(data){
-  const dataContainer = document.querySelector('.data-container')
-  dataContainer.innerHTML = data
 }
